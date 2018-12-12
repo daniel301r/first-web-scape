@@ -65,10 +65,7 @@ def start_game(quotes):
         winner = 2
     else:
         winner = 3
-        
-    print(winner)     
-
-        
+          
     if resp == winner:
         print("You guessed correctly!!")
         print(f"The rating for {quote_1['title']} is {quote_1['rating']} and the rating for {quote_2['title']} is {quote_2['rating']}\n")
@@ -77,20 +74,27 @@ def start_game(quotes):
         print(f"The rating for {quote_1['title']} is {quote_1['rating']} and the rating for {quote_2['title']} is {quote_2['rating']}\n")
     
     if winner == 1:
-        print(f"Now we know that {quote_1['title']} is more highly ranked than {quote_2['title']}.....\nDo you want to guess which book costs more?")
+        print(f"Now we know that {quote_1['title']} is more highly ranked than {quote_2['title']}.....\nDo you want to guess which book costs more (y/n)?")
     elif winner == 2:
-        print(f"Now we know that {quote_2['title']} is more highly ranked than {quote_1['title']}.....\nDo you want to guess which book costs more?")
+        print(f"Now we know that {quote_2['title']} is more highly ranked than {quote_1['title']}.....\nDo you want to guess which book costs more (y/n)?")
     else:
         print(f"Now we know that {quote_1['title']} is as highly ranked as {quote_2['title']}.......do you want to guess which book costs more (y/n)?")
         
-    def cost_guess():
-        print("This is going to be the new feature - wait a couple of days!!")
-    
+    def cost_guess(quotes):
+        print(f"So which one is more expensive? Title 1: {quote_1['title']} or Title 2: {quote_2['title']}")
+        ans = int(input())
+        if quote_1["price"][1:] > quote_2["price"][1:] and ans == 1:
+            print(f"You got it right!! Title 1: {quote_1['title']} costs {quote_1['price']} and Title 2: {quote_2['title']} costs {quote_2['price']}")
+        elif quote_1["price"][1:] < quote_2["price"][1:] and ans == 2:
+            print(f"You got it right!! Title 1: {quote_1['title']} costs {quote_1['price']} and Title 2: {quote_2['title']} costs {quote_2['price']}")
+        else:
+            print(f"You got it wrong!! Title 1: {quote_1['title']} costs {quote_1['price']} and Title 2: {quote_2['title']} costs {quote_2['price']}")
+        
     again = ""
     while again.lower() not in ("y","yes","n","no"):
         again = input()
     if again in ("y","yes"):
-        cost_guess()
+        cost_guess(quotes)
     else:
         print("Ok see you again soon!!")
         
