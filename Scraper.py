@@ -6,15 +6,11 @@ Created on Thu Nov 22 22:14:57 2018
 """
 
 import requests
-
 from bs4 import BeautifulSoup
 from time import sleep
-from random import choice
+from csv import DictWriter
 
 BASE_URL = "http://books.toscrape.com/catalogue/category/books_1/"
-
-
-
 
 def scrape_quotes():
     url = "page-1.html"
@@ -37,67 +33,20 @@ def scrape_quotes():
         sleep(1)
     return all_quotes
 
-def start_game(quotes):
-    quote_1 = choice(quotes)
-    quote_2 = choice(quotes)
-    while quote_1 == quote_2:
-        quote_2 = choice(quotes)
-    print("Which of these two book titles is more highly rated?\nJust type the title number or 3 for a draw")
-    print(f"Title 1: {quote_1['title']}\nTitle 2: {quote_2['title']}")
-    resp = int(input())
-    
-    def rating(quote):
-        if quote['rating'] == "One":
-            return 1
-        elif quote['rating'] == "Two":
-            return 2
-        elif quote['rating'] == "Three":
-            return 3
-        elif quote['rating'] == "Four":
-            return 4
-        else:
-            return 5
-
-    winner = 0
-    if rating(quote_1) > rating(quote_2):
-        winner = 1
-    elif rating(quote_1) < rating(quote_2):
-        winner = 2
-    else:
-        winner = 3
-          
-    if resp == winner:
-        print("You guessed correctly!!")
-        print(f"The rating for {quote_1['title']} is {quote_1['rating']} and the rating for {quote_2['title']} is {quote_2['rating']}\n")
-    else:
-        print("You got it wrong!!")
-        print(f"The rating for {quote_1['title']} is {quote_1['rating']} and the rating for {quote_2['title']} is {quote_2['rating']}\n")
-    
-    if winner == 1:
-        print(f"Now we know that {quote_1['title']} is more highly ranked than {quote_2['title']}.....\nDo you want to guess which book costs more (y/n)?")
-    elif winner == 2:
-        print(f"Now we know that {quote_2['title']} is more highly ranked than {quote_1['title']}.....\nDo you want to guess which book costs more (y/n)?")
-    else:
-        print(f"Now we know that {quote_1['title']} is as highly ranked as {quote_2['title']}.......do you want to guess which book costs more (y/n)?")
+def write_quotes(quotes):
+    with open("books.csv", "w") as file:
+        headers = ("Title", "Rating", "Price")
+        csv_writer = DictWriter(file, fieldnames=headers)
+        csv_writer.writeheader()
+        for quote in quotes:
+            csv_writer.writerow({
+                    "Title": quote["title"],
+                    "Rating": quote["rating"],
+                    "Price": quote["price"]
+            })
         
-    def cost_guess(quotes):
-        print(f"So which one is more expensive? Title 1: {quote_1['title']} or Title 2: {quote_2['title']}")
-        ans = int(input())
-        if quote_1["price"][1:] > quote_2["price"][1:] and ans == 1:
-            print(f"You got it right!! Title 1: {quote_1['title']} costs {quote_1['price']} and Title 2: {quote_2['title']} costs {quote_2['price']}")
-        elif quote_1["price"][1:] < quote_2["price"][1:] and ans == 2:
-            print(f"You got it right!! Title 1: {quote_1['title']} costs {quote_1['price']} and Title 2: {quote_2['title']} costs {quote_2['price']}")
-        else:
-            print(f"You got it wrong!! Title 1: {quote_1['title']} costs {quote_1['price']} and Title 2: {quote_2['title']} costs {quote_2['price']}")
-        
-    again = ""
-    while again.lower() not in ("y","yes","n","no"):
-        again = input()
-    if again in ("y","yes"):
-        cost_guess(quotes)
-    else:
-        print("Ok see you again soon!!")
-        
+quotes = scrape_quotes()
+write_quotes(quotes)
     
     
 
