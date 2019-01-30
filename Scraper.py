@@ -12,9 +12,9 @@ from csv import DictWriter
 
 BASE_URL = "http://books.toscrape.com/catalogue/category/books_1/"
 
-def scrape_quotes():
+def scrape_books():
     url = "page-1.html"
-    all_quotes = []
+    all_books = []
     while url:
         res = requests.get(f"{BASE_URL}{url}")
         soup = BeautifulSoup(res.text, 'html.parser')
@@ -23,7 +23,7 @@ def scrape_quotes():
         books = soup.find_all(class_="product_pod")
         
         for book in books:
-            all_quotes.append({
+            all_books.append({
                 "title": book.find("h3").find("a")["title"],
                 "rating": (str(book.find_all(class_="star-rating")).split())[2][:-2],
                 "price": book.find(class_="price_color").get_text()[1:]
@@ -31,22 +31,22 @@ def scrape_quotes():
         next_btn = soup.find(class_="next")
         url = next_btn.find("a")["href"] if next_btn else None
         sleep(1)
-    return all_quotes
+    return all_books
 
-def write_quotes(quotes):
+def write_books(books):
     with open("books.csv", "w") as file:
         headers = ("Title", "Rating", "Price")
         csv_writer = DictWriter(file, fieldnames=headers)
         csv_writer.writeheader()
-        for quote in quotes:
+        for book in books:
             csv_writer.writerow({
-                    "Title": quote["title"],
-                    "Rating": quote["rating"],
-                    "Price": quote["price"]
+                    "Title": book["title"],
+                    "Rating": book["rating"],
+                    "Price": book["price"]
             })
         
-quotes = scrape_quotes()
-write_quotes(quotes)
+books = scrape_books()
+write_books(books)
     
     
 
