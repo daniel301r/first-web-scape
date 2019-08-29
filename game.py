@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Dec 12 23:02:15 2018
-
-@author: Me
-"""
-
 from random import choice
 from csv import DictReader
 
