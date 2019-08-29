@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Nov 22 22:14:57 2018
-
-@author: Me
-"""
-
 import requests
 from bs4 import BeautifulSoup
 from time import sleep
